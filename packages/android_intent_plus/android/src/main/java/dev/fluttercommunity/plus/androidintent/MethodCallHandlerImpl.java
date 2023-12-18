@@ -146,7 +146,16 @@ public final class MethodCallHandlerImpl implements MethodCallHandler {
       if (value instanceof Integer) {
         bundle.putInt(key, (Integer) value);
       } else if (value instanceof String) {
-        bundle.putString(key, (String) value);
+        if (key.equals(Intent.EXTRA_STREAM)) {
+          Uri uri = Uri.parse((String) value);
+          if (uri != null) {
+            bundle.putParcelable(Intent.EXTRA_STREAM, uri);
+          } else {
+            Log.w(TAG, "Intent.EXTRA_STREAM expects URI data type");
+          }
+        } else {
+          bundle.putString(key, (String) value);
+        }
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
       } else if (value instanceof Double) {
